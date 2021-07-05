@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\Honeypot;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
@@ -23,21 +24,7 @@ Route::get('/posts/create', function () {
 })->middleware('auth')->name('posts.create');
 
 Route::post('/posts', function () {
-    if(! request()->has('my_name')){
-        abort(422, 'Spam detected.');
-    }
 
-    if(!empty(request('my_name'))) {
-        abort(422, 'Spam detected.');
-    }
-
-    $now = microtime(true);
-
-    $elapsed = $now - request('my_time');
-
-    if($elapsed <= 3) {
-        abort(422, 'Spam detected.');
-    }
 
     Post::create(
       request()->validate([
@@ -47,7 +34,7 @@ Route::post('/posts', function () {
     );
 
     return 'Published';
-})->middleware('auth');
+})->middleware('auth', Honeypot::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

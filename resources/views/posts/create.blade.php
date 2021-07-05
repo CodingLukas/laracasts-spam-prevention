@@ -48,32 +48,7 @@
 
                         </div>
 
-                        <div class="mb-6" style="display: none">
-                            <label class="block mb-2 uppercase font-bold text-cs text-gray-700" for="my_name">
-                                My Name
-                            </label>
-
-                            <input class="border border-gray-400 p-2 w-full"
-                                   type="text"
-                                   name="my_name"
-                                   id="my_name"
-                                   required
-                            >
-                        </div>
-
-                        <div class="mb-6" style="display: none">
-                            <label class="block mb-2 uppercase font-bold text-cs text-gray-700" for="my_time">
-                                My Time
-                            </label>
-
-                            <input class="border border-gray-400 p-2 w-full"
-                                   type="text"
-                                   name="my_time"
-                                   id="my_time"
-                                   value="{{ microtime(true) }}"
-                                   required
-                            >
-                        </div>
+                        <x-honeypot />
 
                         <div class="mb-6">
                             <button type="submit"
