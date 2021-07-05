@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/posts/create', function () {
+    return view('posts.create');
+})->middleware('auth')->name('posts.create');
+
+Route::post('/posts', function () {
+    Post::create(
+      request()->validate([
+          'title' => 'required',
+          'body' => 'required'
+      ])
+    );
+
+    return 'Published';
+})->middleware('auth');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
