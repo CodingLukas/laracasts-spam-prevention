@@ -4,15 +4,18 @@
 namespace App\Honeypot;
 
 
+use Closure;
 use Illuminate\Http\Request;
 
 class Honeypot
 {
     protected array $config;
     protected Request $request;
+    protected static Closure $response;
 
     public function __construct(Request $request)
     {
+        $this->request = $request;
         $this->config = config('honeypot');
     }
 
@@ -39,7 +42,7 @@ class Honeypot
 
     private function enabled(): bool
     {
-        return (!$this->config['enabled']);
+        return ($this->config['enabled']);
     }
 
     private function submittedTooQuickly(): float
@@ -47,8 +50,17 @@ class Honeypot
         return microtime(true) - $this->request->input($this->config['field_time_name']);
     }
 
-    private function abort()
+    public function abort()
     {
-        abort(422, 'Spam detected.');
+        if(static::$response) {
+            call_user_func(static::$response);
+            dd(10);
+        }
+        abort(422, 'Spam detected.'); // should be 404 in prod
+    }
+
+    public static function abortUsing(Closure $response)
+    {
+        static::$response = $response;
     }
 }
