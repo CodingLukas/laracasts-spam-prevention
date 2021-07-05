@@ -23,6 +23,22 @@ Route::get('/posts/create', function () {
 })->middleware('auth')->name('posts.create');
 
 Route::post('/posts', function () {
+    if(! request()->has('my_name')){
+        abort(422, 'Spam detected.');
+    }
+
+    if(!empty(request('my_name'))) {
+        abort(422, 'Spam detected.');
+    }
+
+    $now = microtime(true);
+
+    $elapsed = $now - request('my_time');
+
+    if($elapsed <= 3) {
+        abort(422, 'Spam detected.');
+    }
+
     Post::create(
       request()->validate([
           'title' => 'required',
